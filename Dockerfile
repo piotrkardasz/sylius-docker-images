@@ -11,7 +11,7 @@ RUN apk add --no-cache \
 		acl \
 		file \
 		gettext \
-        gnu-libiconv \
+		gnu-libiconv \
 	;
 
 # install gnu-libiconv and set LD_PRELOAD env to make iconv work fully on Alpine image.
