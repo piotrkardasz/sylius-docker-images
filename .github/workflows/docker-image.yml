@@ -9,7 +9,7 @@ on:
 jobs:
 
   build:
-  
+
     name: "Sylius PHP - ${{ matrix.php }}-${{ matrix.distro }}"
 
     runs-on: ubuntu-latest
@@ -19,8 +19,8 @@ jobs:
       matrix:
           php: ["7.4", "8.0"]
           distro: ['alpine']
-          
+
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --build-arg PHP_VERSION=${{ matrix.php }} --tag piotrkardasz/sylius-php:${{ matrix.php }}-${{ matrix.distro }}
+      run: docker build . --file Dockerfile --build-arg PHP_SHORT_VERSION=${{ matrix.php }} --tag piotrkardasz/sylius-php:${{ matrix.php }}-${{ matrix.distro }}

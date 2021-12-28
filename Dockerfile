@@ -1,9 +1,9 @@
-ARG PHP_VERSION=7.4
+ARG PHP_SHORT_VERSION=7.4
 ARG APCU_VERSION=5.1.21
 
-FROM php:${PHP_VERSION}-fpm-alpine
+FROM php:${PHP_SHORT_VERSION}-fpm-alpine
 
-ARG PHP_VERSION
+ARG PHP_SHORT_VERSION
 ARG APCU_VERSION
 
 # persistent / runtime deps
@@ -34,7 +34,7 @@ RUN set -eux; \
 	\
 	# solves BC after PHP 7.4 release
 	# see https://github.com/docker-library/php/issues/912
-	if [[ 1 -eq "$(echo "$PHP_VERSION >= 7.4" | bc)" ]] ; \
+	if [[ 1 -eq "$(echo "$PHP_SHORT_VERSION >= 7.4" | bc)" ]] ; \
         then \
           docker-php-ext-configure gd --with-jpeg --with-webp --with-freetype; \
           docker-php-ext-configure zip --with-zip; \
