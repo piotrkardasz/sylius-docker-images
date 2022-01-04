@@ -55,6 +55,7 @@ jobs:
           context: .
           build-args: "PHP_SHORT_VERSION=${{ matrix.php }}"
           push: ${{ github.ref == 'refs/heads/main' || github.event_name == 'release' }}
+          pull: true
           tags: "piotrkardasz/sylius-php:${{ matrix.php }}-${{ matrix.distro }}"
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
@@ -113,6 +114,7 @@ jobs:
             "IMAGE_NAME=piotrkardasz/sylius-php"
             "IMAGE_TAG=${{ matrix.php }}-${{ matrix.distro }}"
           push: ${{ github.ref == 'refs/heads/main' || github.event_name == 'release' }}
+          pull: true
           tags: "piotrkardasz/sylius-php:${{ matrix.php }}-${{ matrix.distro }}"
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
