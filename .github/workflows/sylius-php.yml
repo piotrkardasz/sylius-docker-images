@@ -29,6 +29,9 @@ jobs:
         id: generate-uuid
         uses: filipstefansson/uuid-action@v1
 
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1.6.0
 
@@ -54,6 +57,7 @@ jobs:
           file: ./Dockerfile
           context: .
           build-args: "PHP_SHORT_VERSION=${{ matrix.php }}"
+          platforms: linux/amd64,linux/arm64
           push: ${{ github.ref == 'refs/heads/main' || github.event_name == 'release' }}
           pull: true
           tags: "${{ secrets.DOCKER_REPOSITORY_NAME }}:${{ matrix.php }}-${{ matrix.distro }}"
@@ -86,6 +90,13 @@ jobs:
         id: generate-uuid
         uses: filipstefansson/uuid-action@v1
 
+      - name: Set up QEMU
+        id: qemu
+        uses: docker/setup-qemu-action@v1
+
+      - name: Available platforms
+        run: echo ${{ steps.qemu.outputs.platforms }}
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1.6.0
 
@@ -113,6 +124,7 @@ jobs:
           build-args: |
             "IMAGE_NAME=${{ secrets.DOCKER_REPOSITORY_NAME }}"
             "IMAGE_TAG=${{ matrix.php }}-${{ matrix.distro }}"
+          platforms: linux/amd64,linux/arm64
           push: ${{ github.ref == 'refs/heads/main' || github.event_name == 'release' }}
           pull: true
           tags: "${{ secrets.DOCKER_REPOSITORY_NAME }}:${{ matrix.php }}-${{ matrix.distro }}"
