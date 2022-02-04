@@ -83,7 +83,7 @@ jobs:
           pull: false
           tags: ${{ steps.meta.outputs.tags }}
           cache-from: type=local,src=/tmp/.buildx-cache-new
-          cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
+          cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new-amd64
           outputs: type=docker,dest=./external/image-amd64.tar
 
       - name: Build linux/arm64 to tar
@@ -97,7 +97,7 @@ jobs:
           pull: false
           tags: ${{ steps.meta.outputs.tags }}
           cache-from: type=local,src=/tmp/.buildx-cache-new
-          cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
+          cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new-arm64
           outputs: type=docker,dest=./external/image-arm64.tar
 
       - name: Setup Bazel
