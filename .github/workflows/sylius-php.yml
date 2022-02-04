@@ -84,7 +84,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           cache-from: type=local,src=/tmp/.buildx-cache-new
           cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
-          outputs: type=docker,dest=/tmp/image-amd64.tar
+          outputs: type=docker,dest=./external/image-amd64.tar
 
       - name: Build linux/arm64 to tar
         uses: docker/build-push-action@v2
@@ -98,7 +98,33 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           cache-from: type=local,src=/tmp/.buildx-cache-new
           cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
-          outputs: type=docker,dest=/tmp/image-arm64.tar
+          outputs: type=docker,dest=./external/image-arm64.tar
+
+      - name: Setup Bazel
+        uses: abhinavsingh/setup-bazel@1fe920bf5df3791aab606c06a3608f4bb600c4f2
+        with:
+          version: 5.0.0
+
+      - name: Mount Bazel cache
+        uses: actions/cache@v2
+        with:
+          path: "~/.cache/bazel"
+          key: "${{ runner.os }}-php-${{ matrix.php }}-${{ matrix.distro }}-bazel-cache-${{ secrets.CACHE_VERSION }}-${{ steps.generate-uuid.outputs.uuid }}"
+          restore-keys: "${{ runner.os }}-php-${{ matrix.php }}-${{ matrix.distro }}-bazel-cache-${{ secrets.CACHE_VERSION }}-"
+
+      - name: Setup PHP for Bazel
+        run: |
+          set -ex
+          cat > php-version.bzl <<EOF
+          PHP_VERSION = "${{ matrix.php }}"
+          EOF
+
+      - name: Bazel build and test
+        run: |
+          set -ex
+          targets=$(bazel query 'attr(visibility, "//visibility:public", //php:*)' | sort)
+          bazel build --curses=no ${targets}
+          bazel test --curses=no --test_output=errors ${targets}
 
       - name: Push
         uses: docker/build-push-action@v2
