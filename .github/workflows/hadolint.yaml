@@ -14,3 +14,4 @@ jobs:
       - uses: hadolint/hadolint-action@v1.6.0
         with:
           dockerfile: Dockerfile
+          failure-threshold: warning
