@@ -27,7 +27,7 @@ load(
     "container_pull",
 )
 load("@io_bazel_rules_docker//container:load.bzl", "container_load")
-load("//:php-arch.bzl", "ARCHITECTURES")
+load("//php:php-arch.bzl", "ARCHITECTURES")
 
 [
     container_load(
