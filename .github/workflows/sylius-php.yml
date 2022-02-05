@@ -62,8 +62,8 @@ jobs:
       - name: Build multiplatform
         uses: docker/build-push-action@v2
         with:
-          file: ./Dockerfile
-          context: .
+          file: ./php/Dockerfile
+          context: ./php
           build-args: "PHP_SHORT_VERSION=${{ matrix.php }}"
           platforms: linux/amd64,linux/arm64
           push: false
@@ -75,8 +75,8 @@ jobs:
       - name: Build linux/amd64 to tar
         uses: docker/build-push-action@v2
         with:
-          file: ./Dockerfile
-          context: .
+          file: ./php/Dockerfile
+          context: ./php
           build-args: "PHP_SHORT_VERSION=${{ matrix.php }}"
           platforms: linux/amd64
           push: false
@@ -89,8 +89,8 @@ jobs:
       - name: Build linux/arm64 to tar
         uses: docker/build-push-action@v2
         with:
-          file: ./Dockerfile
-          context: .
+          file: ./php/Dockerfile
+          context: ./php
           build-args: "PHP_SHORT_VERSION=${{ matrix.php }}"
           platforms: linux/arm64
           push: false
@@ -115,7 +115,7 @@ jobs:
       - name: Setup PHP for Bazel
         run: |
           set -ex
-          cat > php-version.bzl <<EOF
+          cat > php/php-version.bzl <<EOF
           PHP_VERSION = "${{ matrix.php }}"
           EOF
 
@@ -129,8 +129,8 @@ jobs:
       - name: Push
         uses: docker/build-push-action@v2
         with:
-          file: ./Dockerfile
-          context: .
+          file: ./php/Dockerfile
+          context: ./php
           build-args: "PHP_SHORT_VERSION=${{ matrix.php }}"
           platforms: linux/amd64,linux/arm64
           push: ${{ github.ref == 'refs/heads/main' || github.event_name == 'release' }}
@@ -203,8 +203,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
-          file: ./xdebug.Dockerfile
-          context: .
+          file: ./php/xdebug.Dockerfile
+          context: ./php
           build-args: |
             "IMAGE_NAME=${{ secrets.DOCKER_REPOSITORY_NAME }}"
             "IMAGE_TAG=${{ matrix.php }}-${{ matrix.distro }}"
