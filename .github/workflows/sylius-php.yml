@@ -3,8 +3,6 @@ name: PHP Docker Image CI for Sylius
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
   schedule:
     - cron: '0 20 * * 5'
 jobs:
