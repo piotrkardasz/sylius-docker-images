@@ -4,6 +4,9 @@ on:
   workflow_dispatch:
   push:
     branches: [ main ]
+    paths:
+      - 'php/**'
+      - 'WORKSPACE'
   schedule:
     - cron: '0 20 * * 5'
 
