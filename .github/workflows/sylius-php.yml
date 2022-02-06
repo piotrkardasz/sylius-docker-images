@@ -43,7 +43,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: ${{ secrets.DOCKER_REPOSITORY_NAME }}
+          images: ${{ secrets.DOCKER_PHP_REPOSITORY_NAME }}
           tags: |
             type=raw,value=${{ matrix.php }}-${{ matrix.distro }}
 
@@ -183,7 +183,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: ${{ secrets.DOCKER_REPOSITORY_NAME }}
+          images: ${{ secrets.DOCKER_PHP_REPOSITORY_NAME }}
           tags: |
             type=raw,value=${{ matrix.php }}-xdebug-${{ matrix.distro }}
 
@@ -213,7 +213,7 @@ jobs:
           file: ./php/xdebug.Dockerfile
           context: ./php
           build-args: |
-            "IMAGE_NAME=${{ secrets.DOCKER_REPOSITORY_NAME }}"
+            "IMAGE_NAME=${{ secrets.DOCKER_PHP_REPOSITORY_NAME }}"
             "IMAGE_TAG=${{ matrix.php }}-${{ matrix.distro }}"
           platforms: linux/amd64,linux/arm64
           push: ${{ github.ref == 'refs/heads/main' || github.event_name == 'release' }}
