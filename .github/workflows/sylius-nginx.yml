@@ -1,0 +1,76 @@
+name: Nginx Docker Image CI for Sylius
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - 'nginx/**'
+  schedule:
+    - cron: '0 20 * * 5'
+
+concurrency:
+  group: sylius_nginx_build
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: "Sylius NGINX"
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: actions/checkout@v2
+
+      - name: Set UUID
+        id: generate-uuid
+        uses: filipstefansson/uuid-action@v1
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: ${{ secrets.DOCKER_NGINX_REPOSITORY_NAME }}
+          tags: |
+            type=raw,value=alpine
+            type=raw,value=latest
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1.6.0
+
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: "${{ runner.os }}-nginx-alpine-buildx-cache-${{ secrets.CACHE_VERSION }}-${{ steps.generate-uuid.outputs.uuid }}"
+          # https://github.com/actions/cache/issues/109#issuecomment-558771281
+          # https://github.community/t/always-save-new-cache-for-incremental-builds/172791
+          restore-keys: "${{ runner.os }}-nginx-alpine-buildx-cache-${{ secrets.CACHE_VERSION }}-"
+
+      - name: Docker Login
+        uses: docker/login-action@v1.10.0
+        with:
+          username: ${{ secrets.DOCKER_REPOSITORY_LOGIN }}
+          password: ${{ secrets.DOCKER_REPOSITORY_PASSWORD }}
+          logout: true
+
+      - name: Build multiplatform
+        uses: docker/build-push-action@v2
+        with:
+          file: ./nginx/Dockerfile
+          context: ./nginx
+          platforms: linux/amd64,linux/arm64
+          push: ${{ github.ref == 'refs/heads/main' || github.event_name == 'release' }}
+          pull: true
+          tags: ${{ steps.meta.outputs.tags }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
+
+      - name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
