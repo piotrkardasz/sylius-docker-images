@@ -5,6 +5,11 @@ on:
     branches: [ main ]
   schedule:
     - cron: '0 20 * * 5'
+
+concurrency:
+  group: sylius_php_build
+  cancel-in-progress: false
+
 jobs:
 
   build:
