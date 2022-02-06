@@ -1,6 +1,7 @@
 name: PHP Docker Image CI for Sylius
 
 on:
+  workflow_dispatch:
   push:
     branches: [ main ]
   schedule:
