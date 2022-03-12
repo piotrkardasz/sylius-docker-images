@@ -20,4 +20,7 @@ RUN USER=sylius && \
     sed -i 's/^user = www-data/;user = www-data/g' /usr/local/etc/php-fpm.d/www.conf && \
     sed -i 's/^group = www-data/;group = www-data/g' /usr/local/etc/php-fpm.d/www.conf
 
+#Fix permissions during creating named volume public-media:/srv/sylius/public/media:rw
+RUN mkdir -p /srv/sylius/public/media && chmod 777 -R /srv/sylius
+
 USER sylius:sylius
