@@ -43,7 +43,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5.0.0
         with:
-          images: ${{ secrets.DOCKER_PHP_REPOSITORY_NAME }}
+          images: ${{ vars.DOCKER_PHP_REPOSITORY_NAME }}
           tags: |
             type=raw,value=${{ matrix.php }}-${{ matrix.distro }}
 
@@ -54,10 +54,10 @@ jobs:
         uses: actions/cache@v3.3.2
         with:
           path: /tmp/.buildx-cache
-          key: "${{ runner.os }}-php-${{ matrix.php }}-${{ matrix.distro }}-buildx-cache-${{ secrets.CACHE_VERSION }}-${{ steps.generate-uuid.outputs.uuid }}"
+          key: "${{ runner.os }}-php-${{ matrix.php }}-${{ matrix.distro }}-buildx-cache-${{ vars.CACHE_VERSION }}-${{ steps.generate-uuid.outputs.uuid }}"
           # https://github.com/actions/cache/issues/109#issuecomment-558771281
           # https://github.community/t/always-save-new-cache-for-incremental-builds/172791
-          restore-keys: "${{ runner.os }}-php-${{ matrix.php }}-${{ matrix.distro }}-buildx-cache-${{ secrets.CACHE_VERSION }}-"
+          restore-keys: "${{ runner.os }}-php-${{ matrix.php }}-${{ matrix.distro }}-buildx-cache-${{ vars.CACHE_VERSION }}-"
 
       - name: Docker Login
         uses: docker/login-action@v3.0.0
@@ -116,8 +116,8 @@ jobs:
         uses: actions/cache@v3.3.2
         with:
           path: "~/.cache/bazel"
-          key: "${{ runner.os }}-php-${{ matrix.php }}-${{ matrix.distro }}-bazel-cache-${{ secrets.CACHE_VERSION }}-${{ steps.generate-uuid.outputs.uuid }}"
-          restore-keys: "${{ runner.os }}-php-${{ matrix.php }}-${{ matrix.distro }}-bazel-cache-${{ secrets.CACHE_VERSION }}-"
+          key: "${{ runner.os }}-php-${{ matrix.php }}-${{ matrix.distro }}-bazel-cache-${{ vars.CACHE_VERSION }}-${{ steps.generate-uuid.outputs.uuid }}"
+          restore-keys: "${{ runner.os }}-php-${{ matrix.php }}-${{ matrix.distro }}-bazel-cache-${{ vars.CACHE_VERSION }}-"
 
       - name: Setup PHP for Bazel
         run: |
@@ -183,7 +183,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5.0.0
         with:
-          images: ${{ secrets.DOCKER_PHP_REPOSITORY_NAME }}
+          images: ${{ vars.DOCKER_PHP_REPOSITORY_NAME }}
           tags: |
             type=raw,value=${{ matrix.php }}-xdebug-${{ matrix.distro }}
 
@@ -195,10 +195,10 @@ jobs:
         uses: actions/cache@v3.3.2
         with:
           path: /tmp/.buildx-cache
-          key: "${{ runner.os }}-php-xdebug-${{ matrix.php }}-${{ matrix.distro }}-buildx-cache-${{ secrets.CACHE_VERSION }}-${{ steps.generate-uuid.outputs.uuid }}"
+          key: "${{ runner.os }}-php-xdebug-${{ matrix.php }}-${{ matrix.distro }}-buildx-cache-${{ vars.CACHE_VERSION }}-${{ steps.generate-uuid.outputs.uuid }}"
           # https://github.com/actions/cache/issues/109#issuecomment-558771281
           # https://github.community/t/always-save-new-cache-for-incremental-builds/172791
-          restore-keys: "${{ runner.os }}-php-xdebug-${{ matrix.php }}-${{ matrix.distro }}-buildx-cache-${{ secrets.CACHE_VERSION }}-"
+          restore-keys: "${{ runner.os }}-php-xdebug-${{ matrix.php }}-${{ matrix.distro }}-buildx-cache-${{ vars.CACHE_VERSION }}-"
 
       - name: Docker Login
         uses: docker/login-action@v3.0.0
@@ -213,7 +213,7 @@ jobs:
           file: ./php/xdebug.Dockerfile
           context: ./php
           build-args: |
-            "IMAGE_NAME=${{ secrets.DOCKER_PHP_REPOSITORY_NAME }}"
+            "IMAGE_NAME=${{ vars.DOCKER_PHP_REPOSITORY_NAME }}"
             "IMAGE_TAG=${{ matrix.php }}-${{ matrix.distro }}"
           platforms: linux/amd64,linux/arm64
           push: ${{ github.ref == 'refs/heads/main' || github.event_name == 'release' }}
@@ -256,7 +256,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5.0.0
         with:
-          images: ${{ secrets.DOCKER_PHP_REPOSITORY_NAME }}
+          images: ${{ vars.DOCKER_PHP_REPOSITORY_NAME }}
           tags: |
             type=raw,value=${{ matrix.php }}-fixuid-${{ matrix.version }}
 
@@ -267,10 +267,10 @@ jobs:
         uses: actions/cache@v3.3.2
         with:
           path: /tmp/.buildx-cache
-          key: "${{ runner.os }}-php-fixuid-${{ matrix.php }}-${{ matrix.version }}-buildx-cache-${{ secrets.CACHE_VERSION }}-${{ steps.generate-uuid.outputs.uuid }}"
+          key: "${{ runner.os }}-php-fixuid-${{ matrix.php }}-${{ matrix.version }}-buildx-cache-${{ vars.CACHE_VERSION }}-${{ steps.generate-uuid.outputs.uuid }}"
           # https://github.com/actions/cache/issues/109#issuecomment-558771281
           # https://github.community/t/always-save-new-cache-for-incremental-builds/172791
-          restore-keys: "${{ runner.os }}-php-fixuid-${{ matrix.php }}-${{ matrix.version }}-buildx-cache-${{ secrets.CACHE_VERSION }}-"
+          restore-keys: "${{ runner.os }}-php-fixuid-${{ matrix.php }}-${{ matrix.version }}-buildx-cache-${{ vars.CACHE_VERSION }}-"
 
       - name: Docker Login
         uses: docker/login-action@v3.0.0
@@ -285,7 +285,7 @@ jobs:
           file: ./php-fixuid/Dockerfile
           context: ./php-fixuid
           build-args: |
-            "IMAGE_NAME=${{ secrets.DOCKER_PHP_REPOSITORY_NAME }}"
+            "IMAGE_NAME=${{ vars.DOCKER_PHP_REPOSITORY_NAME }}"
             "IMAGE_TAG=${{ matrix.php }}-${{ matrix.version }}"
           platforms: linux/amd64,linux/arm64
           push: ${{ github.ref == 'refs/heads/main' || github.event_name == 'release' }}
