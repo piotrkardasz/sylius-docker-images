@@ -8,7 +8,7 @@ FROM ${IMAGE_NAME}:${IMAGE_TAG}
 ARG XDEBUG_VERSION
 
 RUN set -eux; \
-	apk add --no-cache --virtual .build-deps $PHPIZE_DEPS; \
+	apk add --no-cache --virtual .build-deps $PHPIZE_DEPS linux-headers; \
 	pecl install xdebug-$XDEBUG_VERSION; \
 	docker-php-ext-enable xdebug; \
 	apk del .build-deps
