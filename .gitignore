@@ -3,8 +3,6 @@
 /bazel-*
 # Ignore outputs generated during Bazel bootstrapping.
 /output/
-# Bazelisk version file
-.bazelversion
 # User-specific .bazelrc
 user.bazelrc
 /external/*
