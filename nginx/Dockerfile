@@ -1,5 +1,14 @@
+ARG WORKING_DIR=/srv/sylius
+
 FROM nginx:stable-alpine
 
-RUN mkdir -p /srv/sylius
+ARG WORKING_DIR
 
-COPY conf.d/default.conf /etc/nginx/conf.d/
+ENV WORKING_DIR=${WORKING_DIR}
+ENV FASTCGI_PASS=php:9000
+
+RUN mkdir -p ${WORKING_DIR}
+
+COPY templates/default.conf.template /etc/nginx/templates/
+
+WORKDIR ${WORKING_DIR}
